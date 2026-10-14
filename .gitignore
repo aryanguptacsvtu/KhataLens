@@ -1,0 +1,5 @@
+__pycache__/
+*.db
+.pytest_cache/
+data/synth/images/
+data/synth/*.jsonl
