@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en" data-theme="clean">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KhataLens</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📒%3C/text%3E%3C/svg%3E">
+  <script>
+    /* Apply the saved theme before first paint so there is no flash. */
+    try {
+      var t = localStorage.getItem("khatalens.theme");
+      if (t === "clean" || t === "ledger" || t === "midnight") document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="appbar">
+    <div class="wrap bar">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 36 36" width="38" height="38" aria-hidden="true">
+          <rect class="bg" width="36" height="36" rx="9"/>
+          <path class="fg" d="M9 11h9M9 16h6M9 21h5" fill="none" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+          <circle class="fg" cx="20" cy="17" r="6.5" fill="none" stroke-width="2.2"/>
+          <path class="fg" d="M24.8 21.8 29 26" fill="none" stroke-width="2.6" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <h1>KhataLens</h1>
+          <p class="tagline">Photo of your udhaar notebook in, clean ledger and reminders out.</p>
+        </div>
+      </div>
+
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        <button class="tab" role="tab" id="tab-scan" data-tab="scan" aria-controls="panel-scan" aria-selected="true" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M4 12h16"/></svg>
+          <span>Scan a page</span>
+        </button>
+        <button class="tab" role="tab" id="tab-ledger" data-tab="ledger" aria-controls="panel-ledger" aria-selected="false" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14c3 0 5 1.6 5 4"/></svg>
+          <span>Who owes me</span>
+        </button>
+        <button class="tab" role="tab" id="tab-remind" data-tab="remind" aria-controls="panel-remind" aria-selected="false" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          <span>Send reminders</span>
+        </button>
+      </nav>
+
+      <button id="settings-btn" class="btn ghost" type="button" aria-expanded="false" aria-controls="settings">
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Settings drawer -->
+  <div id="scrim" hidden></div>
+  <aside id="settings" aria-label="Settings" hidden>
+    <div class="drawer-head">
+      <h2>Settings</h2>
+      <button id="settings-close" class="btn ghost small" type="button" aria-label="Close settings">✕</button>
+    </div>
+
+    <div class="field">
+      <span>Appearance</span>
+      <div class="themes" id="themes" role="group" aria-label="Appearance">
+        <button type="button" class="theme-opt" data-theme-pick="clean" aria-pressed="true">
+          <span class="swatch"><i style="background:#f4f6fa"></i><i style="background:#2459d6"></i><i style="background:#ffffff"></i></span>
+          <b>Clean</b>
+        </button>
+        <button type="button" class="theme-opt" data-theme-pick="ledger" aria-pressed="false">
+          <span class="swatch"><i style="background:#f3ecdd"></i><i style="background:#1d6a5b"></i><i style="background:#fffdf8"></i></span>
+          <b>Ledger</b>
+        </button>
+        <button type="button" class="theme-opt" data-theme-pick="midnight" aria-pressed="false">
+          <span class="swatch"><i style="background:#0f141c"></i><i style="background:#5b8cff"></i><i style="background:#171d28"></i></span>
+          <b>Midnight</b>
+        </button>
+      </div>
+    </div>
+
+    <label class="field">Shop name
+      <input id="set-shop" type="text" autocomplete="off">
+    </label>
+    <label class="field">Vision model (Ollama)
+      <input id="set-model" type="text" autocomplete="off" spellcheck="false">
+      <small class="muted">Any vision model Ollama can serve, e.g. your fine-tuned one.</small>
+    </label>
+    <label class="field">Year of the page
+      <input id="set-year" type="number" min="2000" max="2100" step="1">
+    </label>
+    <label class="field">Reminder language
+      <select id="set-lang"></select>
+    </label>
+    <p class="privacy">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      All processing is local. Your customers' names and amounts never leave this computer.
+    </p>
+  </aside>
+
+  <main class="wrap">
+    <!-- ============ Scan a page ============ -->
+    <section id="panel-scan" class="panel" role="tabpanel" aria-labelledby="tab-scan">
+      <div class="grid-2">
+        <div class="card col-left">
+          <h2 class="card-title"><span class="step">1</span> Add a photo</h2>
+
+          <div class="seg" id="src-seg" role="group" aria-label="Photo source">
+            <button type="button" data-src="upload" class="on">Upload</button>
+            <button type="button" data-src="camera">Camera</button>
+          </div>
+
+          <div id="src-upload">
+            <label class="drop" id="drop" for="file">
+              <input type="file" id="file" accept="image/jpeg,image/png">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+              <span class="drop-title">Drop a photo here or <u>choose a file</u></span>
+              <small class="muted">JPG or PNG, one notebook page</small>
+            </label>
+          </div>
+
+          <div id="src-camera" hidden>
+            <video id="cam" autoplay playsinline muted></video>
+            <p id="cam-msg" class="muted"></p>
+            <button id="cam-shot" class="btn" type="button">Take photo</button>
+          </div>
+
+          <button id="sample-btn" class="btn ghost" type="button" hidden>Try a sample page (no model needed)</button>
+
+          <figure id="preview" hidden>
+            <img id="preview-img" alt="Your page">
+            <figcaption class="muted">Your page</figcaption>
+          </figure>
+        </div>
+
+        <div class="card col-right">
+          <h2 class="card-title"><span class="step">2</span> Review and save</h2>
+
+          <button id="read-btn" class="btn primary" type="button" hidden>Read this page</button>
+          <div id="busy" class="busy" hidden><span class="spinner" aria-hidden="true"></span> Reading handwriting on this computer...</div>
+          <div id="msg" role="status" aria-live="polite"></div>
+
+          <div id="review-empty" class="placeholder">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7"/></svg>
+            <p>Your lines will appear here.</p>
+            <small class="muted">Add a photo of one page, then press Read this page. You can fix any name or amount before saving.</small>
+          </div>
+
+          <div id="review" hidden>
+            <div id="review-banner"></div>
+            <div id="review-editor">
+              <div class="table-wrap">
+                <table class="grid" id="review-table">
+                  <thead>
+                    <tr>
+                      <th>date</th><th>customer</th><th>items</th><th>amount (₹)</th><th>type</th><th>check</th><th><span class="sr-only">Remove row</span></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="row">
+                <button id="add-row" class="btn ghost" type="button">+ Add row</button>
+                <button id="save-btn" class="btn primary" type="button">Save to ledger</button>
+              </div>
+            </div>
+            <details class="raw">
+              <summary>Raw model output (for debugging)</summary>
+              <pre id="raw"></pre>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Who owes me ============ -->
+    <section id="panel-ledger" class="panel" role="tabpanel" aria-labelledby="tab-ledger" hidden>
+      <div class="filters">
+        <div class="seg" id="status-seg" role="group" aria-label="Show">
+          <button type="button" data-status="pending" class="on">Pending</button>
+          <button type="button" data-status="settled">Settled</button>
+          <button type="button" data-status="check">Needs a check</button>
+        </div>
+        <div id="age-wrap" class="age">
+          <span class="muted">Last entry was</span>
+          <div class="seg" id="age-seg" role="group" aria-label="Last entry was" title="Find customers you have not heard from for a while.">
+            <button type="button" data-days="" class="on">Any time</button>
+            <button type="button" data-days="30">30+ days ago</button>
+            <button type="button" data-days="60">60+ days ago</button>
+            <button type="button" data-days="90">90+ days ago</button>
+          </div>
+        </div>
+      </div>
+      <div id="ledger-body"></div>
+    </section>
+
+    <!-- ============ Send reminders ============ -->
+    <section id="panel-remind" class="panel" role="tabpanel" aria-labelledby="tab-remind" hidden>
+      <div id="remind-body"></div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
