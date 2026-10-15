@@ -128,3 +128,24 @@ def customer_history(conn: sqlite3.Connection, name: str):
         (name,),
     ).fetchall()
     return [dict(r) for r in rows]
+
+
+def customer_entries(conn: sqlite3.Connection, name: str):
+    """Like customer_history but each row also carries its entry id (used for review/delete)."""
+    rows = conn.execute(
+        """SELECT e.id, e.date, e.items, e.amount, e.type FROM entries e
+           JOIN customers c ON c.id = e.customer_id
+           WHERE c.name = ? ORDER BY e.date, e.id""",
+        (name,),
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def delete_entry(conn: sqlite3.Connection, entry_id: int, name: str) -> bool:
+    """Delete one entry, but only if it belongs to the named customer. Returns True if removed."""
+    cur = conn.execute(
+        """DELETE FROM entries WHERE id = ?
+           AND customer_id = (SELECT id FROM customers WHERE name = ?)""",
+        (entry_id, name),
+    )
+    return cur.rowcount > 0
