@@ -22,7 +22,8 @@ def _estimate_skew_degrees(gray: np.ndarray) -> float:
     if lines is None:
         return 0.0
     angles = []
-    for x1, y1, x2, y2 in lines[:, 0]:
+    # Hough output is (N, 1, 4) on some OpenCV builds and (N, 4) on others; accept both.
+    for x1, y1, x2, y2 in np.asarray(lines).reshape(-1, 4):
         a = np.degrees(np.arctan2(y2 - y1, x2 - x1))
         if abs(a) < 15:  # only near-horizontal lines
             angles.append(a)
