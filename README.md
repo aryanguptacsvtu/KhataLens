@@ -7,6 +7,13 @@ open-weight vision-language model served by Ollama. No customer data leaves the 
 The app is a plain HTML/CSS/JavaScript web page (no build step, no CDN, works offline)
 served by a small local Python server that wraps the `khatalens` package.
 
+<p align="center">
+  <img src="demo/image1.png" width="48%" height='318'>
+  <img src="demo/image2.png" width="50%" height='255'>
+  <img src="demo/image3.png" width="62%" height='345'>
+</p>
+
+
 ## Quick start
 
 ```bash
