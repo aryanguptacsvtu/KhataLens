@@ -2,8 +2,7 @@
 """Field-level accuracy on a labelled set of ledger pages.
 
     # open model through Ollama (base or your fine-tuned one)
-    python scripts/evaluate.py --labels data/test/labels.jsonl --backend ollama --model qwen2.5vl:7b
-
+    python scripts/evaluate.py --labels data/test/labels.jsonl --backend ollama --model gemma3:4b
     # closed-API baseline for the comparison table (needs ANTHROPIC_API_KEY)
     python scripts/evaluate.py --labels data/test/labels.jsonl --backend anthropic --model <model-name>
 

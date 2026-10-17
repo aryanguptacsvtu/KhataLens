@@ -18,7 +18,7 @@ served by a small local Python server that wraps the `khatalens` package.
 
 ```bash
 pip install -r requirements.txt
-ollama pull qwen2.5vl:7b          # or any vision model your hardware can run
+ollama pull gemma3:4b          # or any vision model your hardware can run
 python scripts/synth_ledger.py --n 20 --out data/synth    # sample pages for the demo
 python server.py                  # opens http://127.0.0.1:8000
 ```
@@ -143,7 +143,7 @@ Used by the web UI; all endpoints are local and return JSON.
 
 | Setting | Default | Notes |
 |---|---|---|
-| `KHATALENS_MODEL` | `qwen2.5vl:7b` | Default vision model name (also editable in Settings) |
+| `KHATALENS_MODEL` | `gemma3:4b` | Default vision model name (also editable in Settings) |
 | `OLLAMA_HOST` | `http://localhost:11434` | Where Ollama is running |
 | `--port` | `8000` | `server.py` option |
 
@@ -153,7 +153,7 @@ holds all customer data. Run `python server.py` from the project folder.
 ## Evaluate (the table for your write-up)
 
 ```bash
-python scripts/evaluate.py --labels data/test/labels.jsonl --backend ollama --model qwen2.5vl:7b
+python scripts/evaluate.py --labels data/test/labels.jsonl --backend ollama --model gemma3:4b
 python scripts/evaluate.py --labels data/test/labels.jsonl --backend ollama --model khatalens-ft
 python scripts/evaluate.py --labels data/test/labels.jsonl --backend anthropic --model <closed-model>
 ```
